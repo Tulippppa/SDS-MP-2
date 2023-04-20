@@ -1,0 +1,16 @@
+---
+title: "Mp2"
+author: "Tulip, Katy, Michel"
+format: pdf
+editor: visual
+---
+
+## How do different ad contents and sentiment types influence people\'s perception of the dairy industry 
+
+## Introduction
+
+## Methods
+
+## Results
+
+## Conclusions
