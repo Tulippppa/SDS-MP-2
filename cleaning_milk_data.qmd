@@ -1,0 +1,33 @@
+---
+title: "cleaning up milk data"
+format: pdf
+editor: visual
+---
+
+```{r,include=F, warnign=F, echo=F }
+library(tidyverse)
+library(rio)
+library(asbio)
+```
+
+```{r}
+#importing our data
+milk_data <- import("SDS290_MP2_MilkData.csv")
+```
+
+```{r}
+#deleting the (unwanted rows) to make our project reproducable
+milk_data <- milk_data |>
+  filter(!row_number() %in% c(1,2))
+
+```
+
+```{r}
+#Right now, Qualtrics has separated out our DV based on which question they received, but we need to combine them into a single column for each DV. R needs to know that we want to compare responses from each group. We also need to create an indicator for which group someone is in
+
+#milk_data <- milk_data |>
+#   unite(willingness_to_listen, Q1_1, Q23_1, Q27_1, sep = "", remove=F) |>
+#   unite(maturity, Q11_1, Q24_1, Q28_1, sep = "", remove=F) |>
+#   unite(music_type, Q9, Q25, Q29, sep = "", remove=F) |>
+ #  unite(characteristics, Q22, Q26, Q30, sep = "", remove=F) 
+```
