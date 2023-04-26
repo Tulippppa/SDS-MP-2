@@ -5,12 +5,25 @@ format: pdf
 editor: visual
 ---
 
-## How do different ad contents and sentiment types influence people\'s perception of the dairy industry 
+## How do different ad contents and sentiment types influence people's perception of the dairy industry
 
 ## Introduction
 
 ## Methods
 
 ## Results
+
+```{r, loadingpkge, echo = FALSE, warning=F, message=F}
+library(tidyverse)
+library(rio)
+library(asbio)
+library(tidyr)
+library(ggplot2)
+library(ggpubr)
+```
+
+```{r, loadingdata, warning=F, message=F}
+milk_data <- import("SDS290_MP2_MilkData.csv")
+```
 
 ## Conclusions
