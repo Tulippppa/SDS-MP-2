@@ -61,7 +61,7 @@ milk_data$PlantPic_2 <- as.numeric(milk_data$PlantPic_2)
 ```
 
 ```{r}
-# removing NA values  and putting them in the treatment
+# removing NA values  and putting them in the treatment of both treatments together
 milk_data$treatment[!is.na(milk_data$DairyPro_1)] <- "DairyPro"
 milk_data$treatment[!is.na(milk_data$DairyCon_1)] <- "DairyCon"
 milk_data$treatment[!is.na(milk_data$DairyPic_1)] <- "Dairy_control"
@@ -75,20 +75,54 @@ milk_data$treatment[!is.na(milk_data$DairyPic_1)] <- "Dairy_control"
 milk_data$treatment[!is.na(milk_data$PlantPro_1)] <- "PlantPro"
 milk_data$treatment[!is.na(milk_data$PlantCon_1)] <- "PlantCon"
 milk_data$treatment[!is.na(milk_data$PlantPic_1)] <- "Plant_control"
+
+# making a cokumn for only dairy/non dairy treatment
+milk_data$milk_type[!is.na(milk_data$DairyPro_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyCon_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyPic_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$PlantPro_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantCon_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantPic_1)] <- "Plant"
+
+milk_data$milk_type[!is.na(milk_data$DairyPro_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyCon_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyPic_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$PlantPro_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantCon_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantPic_1)] <- "Plant"
+
+# making column for pos/neg/neutral treatment
+milk_data$ad_type[!is.na(milk_data$DairyPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$DairyCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$DairyPic_1)] <- "Control"
+milk_data$ad_type[!is.na(milk_data$PlantPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$PlantCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$PlantPic_1)] <- "Control"
+
+milk_data$ad_type[!is.na(milk_data$DairyPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$DairyCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$DairyPic_1)] <- "Control"
+milk_data$ad_type[!is.na(milk_data$PlantPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$PlantCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$PlantPic_1)] <- "Control"
 ```
 
 ```{r}
 milk_data$treatment <- as.factor(milk_data$treatment)
+milk_data$ad_type <- as.factor(milk_data$ad_type)
+milk_data$milk_type <- as.factor(milk_data$milk_type)
 ### drop cases where respondent didn't answer survey
 
 milk_data <- milk_data |>
-  drop_na("treatment")
+  drop_na("treatment") |>
+  drop_na("ad_type") |>
+  drop_na("milk_type")
 ```
 
 ```{r}
 #We now have our DV and IV constructed now, but we still have way to many variable, we can select for the ones we want
 milk_df1 <- milk_data|>
-  select(consumer_likelihood, average_purchase, DairyPro_1, DairyCon_1, DairyPic_1, PlantPro_1, PlantCon_1, PlantPic_1, DairyPro_2, DairyCon_2, DairyPic_2, PlantPro_2, PlantCon_2, PlantPic_2, treatment)
+  select(consumer_likelihood, average_purchase, DairyPro_1, DairyCon_1, DairyPic_1, PlantPro_1, PlantCon_1, PlantPic_1, DairyPro_2, DairyCon_2, DairyPic_2, PlantPro_2, PlantCon_2, PlantPic_2, treatment, ad_type, milk_type)
 ```
 
 ```{r}
