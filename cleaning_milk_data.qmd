@@ -133,5 +133,5 @@ milk_df1 <- milk_df1|>
 
 ```{r}
 #how to export the data
-#export(milk_df1, "milk_cleaned_data.csv")
+milk<- export(milk_df1, "milk_cleaned_data.csv")
 ```
