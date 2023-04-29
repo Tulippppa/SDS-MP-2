@@ -49,26 +49,9 @@ Our largest standard deviation \[`Plant Control & Dairy Control`\] 1.38 divided 
 1.38/1.05
 ```
 
-[**Condition Check 2 Constant Variance**]{.underline}:
-
-In our density plot, we view the distribution of the `Consumer Likelihood` at the different levels of the `Milk (ad type and sentiment)` treatment. The data is not normally distributed nor unimodal among all levels. While the data distributions for the `Plant_control` and `PlantPro(+)` are normal, the other distributions vary. For example, `DairyCon` and `Plant_control` is bimodal, `Dairy control` and `DairyPro` is right-skewed. Therefore, we have violated the condition about constant variance for our ANOVA model.
+[**Condition Check 2 Symmetrical Distribution around Group Means**]{.underline}:
 
 ```{r, CONDI02, warning=F, message=F, fig.height = 3, fig.width = 6, fig.align = "center", echo=FALSE}
-#DENSITY PLOT (normal distribution)
-milk_distribution <-
-  ggplot(data=milk_df1, aes(x=consumer_likelihood, color=treatment)) + 
-  geom_density() + 
-  labs(title ="Consumer Likelihood Density Plot",
-      subtitle= "Assessing Distribution by Milk Treatment",
-      caption ="source: Qualtrics Milk Data") +
-  xlab("Treatment") +
-  ylab ("Consumer Likelihood") 
-milk_distribution
-```
-
-[**Condition Check 3 Symmetrical Distribution around Group Means**]{.underline}:
-
-```{r, CONDI03, warning=F, message=F, fig.height = 3, fig.width = 6, fig.align = "center", echo=FALSE}
 #BOX PLOT (constant variance)
 milk_means <-
   ggplot(data=milk_df1, aes(x=consumer_likelihood, y=treatment)) + 
@@ -78,11 +61,21 @@ milk_means <-
       subtitle= "Assessing Distribution by Treatment",
       caption ="source: Qualtrics Milk Data") +
   xlab("Treatment") +
-  ylab ("Consumer Likelihood") 
+  ylab ("Consumer Likelihood") + coord_flip()
 milk_means
 ```
 
+[**Condition Check 3 Anscombe Plot:**]{.underline}
+
+```{r, ANSCOMBE, warning=F, message=F, echo=FALSE}
+
+```
+
 [**Conditions Interpretation & Transformation:**]{.underline}
+
+```{r,INTERPRET, warning=F, message=F, echo=FALSE}
+
+```
 
 [**Two-Way ANOVA Model**]{.underline}:
 
@@ -100,6 +93,30 @@ summary(milk_anova2)
 
 interaction <- aov(consumer_likelihood~ad_type*milk_type, data=milk_df1) 
 summary(interaction) 
+```
+
+[**Anscombe Plot:**]{.underline}
+
+[**Pairwise Comparison**]{.underline}:
+
+```{r, PAIRWISE, warning=F, message=F, echo=FALSE}
+#FISHERSLSD
+milk_lsd <-
+  pairw.anova(milk_df1$ad_type, 
+              milk_df1$milk_type,
+              method="lsd", conf.level=.95)
+milk_lsd
+
+#TUKEYHSD()
+milk_tukey <- TukeyHSD(milk_anova2)
+milk_tukey
+
+#BONFERONNI
+milk_bonf <- 
+  bonfCI(milk_df1$consumer_likelihood, 
+         milk_df1$ad_type, milk_df1$milk_type, 
+         conf.level = 0.95)
+milk_bonf
 ```
 
 [**Independent residuals:**]{.underline}
@@ -132,6 +149,8 @@ milk_resid
 
 [**Normally Distributed Residuals**:]{.underline}
 
+In our density plot, we view the distribution of the `Consumer Likelihood` at the different levels of the `Milk (ad type and sentiment)` treatment. The data is not normally distributed nor unimodal among all levels. While the data distributions for the `Plant_control` and `PlantPro(+)` are normal, the other distributions vary. For example, `DairyCon` and `Plant_control` is bimodal, `Dairy control` and `DairyPro` is right-skewed. Therefore, we have violated the condition about constant variance for our ANOVA model.
+
 ```{r, RESIDCHECK02, warning=F, message=F, echo=FALSE}
 #RESID PLOT2
 milk_resid2 <-
@@ -141,6 +160,12 @@ milk_resid2 <-
       subtitle= "Assessing Distribution by Treatment",
       caption ="source: Qualtrics Milk Data") 
 milk_resid2
+```
+
+[**Levene's Test:**]{.underline}
+
+```{r, LEVENET, warning=F, message=F, echo=FALSE}
+leveneTest(consumer_likelihood~treatment, data=milk_df1)
 ```
 
 [**Confidence Intervals & Effect Size**]{.underline}:
