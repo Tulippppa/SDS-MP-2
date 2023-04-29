@@ -68,12 +68,12 @@ milk_means
 [**Condition Check 3 Anscombe Plot:**]{.underline}
 
 ```{r, ANSCOMBE, warning=F, message=F, echo=FALSE}
-
+ggplot(data=milk_df1, aes(x=ad_type))
 ```
 
 [**Conditions Interpretation & Transformation:**]{.underline}
 
-```{r,INTERPRET, warning=F, message=F, echo=FALSE}
+```{r, INTERPRET, warning=F, message=F, echo=FALSE}
 
 ```
 
@@ -94,8 +94,6 @@ summary(milk_anova2)
 interaction <- aov(consumer_likelihood~ad_type*milk_type, data=milk_df1) 
 summary(interaction) 
 ```
-
-[**Anscombe Plot:**]{.underline}
 
 [**Pairwise Comparison**]{.underline}:
 
