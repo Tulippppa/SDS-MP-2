@@ -17,28 +17,32 @@ milk_data <- import("SDS290_MP2_MilkData.csv")
 ```
 
 ```{r}
-#deleting the (unwanted rows) to make our project reproducable
+#deleting unwanted rows to make our project reproducable
 milk_data <- milk_data |>
   filter(!row_number() %in% c(1,2))
-
 ```
 
 ```{r}
 #Right now, Qualtrics has separated out our DV based on which question they received, but we need to combine them into a single column for each DV. R needs to know that we want to compare responses from each group. We also need to create an indicator for which group someone is in
 
-#milk_data$PlantPro_1 <- "milk_data$PlantPro _1" 
-#milk_data$PlantPro_2 <- "milk_data$PlantPro _2" 
+# changing column names
+milk_data <- milk_data %>%
+  rename(PlantPro_1 = "PlantPro _1")
 
-milk_data <- milk_data |>
-  #rename(PlantPro_2 = 'PlantPro _2')
-  rename(PlantPro_1 = 'PlantPro _1')
-
-milk_data <- milk_data |>
-   unite(consumer_likelihood, DairyPro_1, DairyCon_1, DairyPic_1, PlantPro_1, PlantCon_1,PlantPic_1, sep = "", remove=F) |>
-   unite(average_purchase, DairyPro_2, DairyCon_2, DairyPic_2, PlantPro_2, PlantCon_2,PlantPic_2, sep = "", remove=F)
+milk_data <- milk_data %>%
+ rename(PlantPro_2 = "PlantPro _2") 
+  
 ```
 
 ```{r}
+# combining our DV into a single column for each DV
+milk_data <- milk_data |>
+  unite(consumer_likelihood, DairyPro_1, DairyCon_1, DairyPic_1, PlantPro_1, PlantCon_1, PlantPic_1, sep = "", remove=F) |>
+  unite(average_purchase, DairyPro_2, DairyCon_2, DairyPic_2, PlantPro_2, PlantCon_2,PlantPic_2, sep = "", remove=F)
+```
+
+```{r}
+# changing them from character to numeric
 milk_data$DairyPro_1 <- as.numeric(milk_data$DairyPro_1)
 milk_data$DairyCon_1<- as.numeric(milk_data$DairyCon_1)
 milk_data$DairyPic_1 <- as.numeric(milk_data$DairyPic_1)
@@ -57,44 +61,77 @@ milk_data$PlantPic_2 <- as.numeric(milk_data$PlantPic_2)
 ```
 
 ```{r}
-milk_data$treatment[!is.na(milk_data$DairyPro_1)] <- "DairyPro_1"
-milk_data$treatment[!is.na(milk_data$DairyCon_1)] <- "DairyCon_1"
-milk_data$treatment[!is.na(milk_data$DairyPic_1)] <- "DairyPic_1"
-milk_data$treatment[!is.na(milk_data$PlantPro_1)] <- "PlantPro_1"
-milk_data$treatment[!is.na(milk_data$PlantCon_1)] <- "PlantCon_1"
-milk_data$treatment[!is.na(milk_data$PlantPic_1)] <- "PlantPic_1"
+# removing NA values  and putting them in the treatment of both treatments together
+milk_data$treatment[!is.na(milk_data$DairyPro_1)] <- "DairyPro"
+milk_data$treatment[!is.na(milk_data$DairyCon_1)] <- "DairyCon"
+milk_data$treatment[!is.na(milk_data$DairyPic_1)] <- "Dairy_control"
+milk_data$treatment[!is.na(milk_data$PlantPro_1)] <- "PlantPro"
+milk_data$treatment[!is.na(milk_data$PlantCon_1)] <- "PlantCon"
+milk_data$treatment[!is.na(milk_data$PlantPic_1)] <- "Plant_control"
 
-milk_data$treatment[!is.na(milk_data$DairyPro_1)] <- "DairyPro_2"
-milk_data$treatment[!is.na(milk_data$DairyCon_1)] <- "DairyCon_2"
-milk_data$treatment[!is.na(milk_data$DairyPic_1)] <- "DairyPic_2"
-milk_data$treatment[!is.na(milk_data$PlantPro_1)] <- "PlantPro_2"
-milk_data$treatment[!is.na(milk_data$PlantCon_1)] <- "PlantCon_2"
-milk_data$treatment[!is.na(milk_data$PlantPic_1)] <- "PlantPic_2"
+milk_data$treatment[!is.na(milk_data$DairyPro_1)] <- "DairyPro"
+milk_data$treatment[!is.na(milk_data$DairyCon_1)] <- "DairyCon"
+milk_data$treatment[!is.na(milk_data$DairyPic_1)] <- "Dairy_control"
+milk_data$treatment[!is.na(milk_data$PlantPro_1)] <- "PlantPro"
+milk_data$treatment[!is.na(milk_data$PlantCon_1)] <- "PlantCon"
+milk_data$treatment[!is.na(milk_data$PlantPic_1)] <- "Plant_control"
+
+# making a cokumn for only dairy/non dairy treatment
+milk_data$milk_type[!is.na(milk_data$DairyPro_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyCon_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyPic_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$PlantPro_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantCon_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantPic_1)] <- "Plant"
+
+milk_data$milk_type[!is.na(milk_data$DairyPro_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyCon_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$DairyPic_1)] <- "Dairy"
+milk_data$milk_type[!is.na(milk_data$PlantPro_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantCon_1)] <- "Plant"
+milk_data$milk_type[!is.na(milk_data$PlantPic_1)] <- "Plant"
+
+# making column for pos/neg/neutral treatment
+milk_data$ad_type[!is.na(milk_data$DairyPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$DairyCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$DairyPic_1)] <- "Control"
+milk_data$ad_type[!is.na(milk_data$PlantPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$PlantCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$PlantPic_1)] <- "Control"
+
+milk_data$ad_type[!is.na(milk_data$DairyPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$DairyCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$DairyPic_1)] <- "Control"
+milk_data$ad_type[!is.na(milk_data$PlantPro_1)] <- "Pro"
+milk_data$ad_type[!is.na(milk_data$PlantCon_1)] <- "Con"
+milk_data$ad_type[!is.na(milk_data$PlantPic_1)] <- "Control"
 ```
 
 ```{r}
 milk_data$treatment <- as.factor(milk_data$treatment)
+milk_data$ad_type <- as.factor(milk_data$ad_type)
+milk_data$milk_type <- as.factor(milk_data$milk_type)
 ### drop cases where respondent didn't answer survey
 
 milk_data <- milk_data |>
-  drop_na("treatment")
+  drop_na("treatment") |>
+  drop_na("ad_type") |>
+  drop_na("milk_type")
 ```
 
 ```{r}
 #We now have our DV and IV constructed now, but we still have way to many variable, we can select for the ones we want
-
-#milk_data_2 <- milk_data |>
-#  select(Q1, Q2, Q3, willingness_to_listen, maturity, music_type, characteristics, treatment)
+milk_df1 <- milk_data|>
+  select(consumer_likelihood, average_purchase, DairyPro_1, DairyCon_1, DairyPic_1, PlantPro_1, PlantCon_1, PlantPic_1, DairyPro_2, DairyCon_2, DairyPic_2, PlantPro_2, PlantCon_2, PlantPic_2, treatment, ad_type, milk_type)
 ```
 
 ```{r}
 #Our last problem is we have our response variable as the wrong variable type & we need to convert them to numeric. We are now ready to go.
-
-#milk_data_2 <- milk_data_2 |>
-#  mutate_at(c('willingness_to_listen', 'maturity'), as.numeric)
+milk_df1 <- milk_df1|>
+  mutate_at(c('consumer_likelihood', 'average_purchase'), as.numeric)
 ```
 
 ```{r}
 #how to export the data
-#export(Harry_styles_df, "harry_styles_cleaned_data.csv")
+milk<- export(milk_df1, "milk_cleaned_data.csv")
 ```
