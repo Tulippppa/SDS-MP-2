@@ -1,0 +1,117 @@
+---
+title: "MP2 Technical Report: "
+author: "Katy Cummings, Tulip Daaboul, Michel Ruiz-Fuentes"
+format: pdf
+editor: visual
+date: "`r Sys.Date()`"
+indent: true
+---
+
+## Introduction
+
+## Methodology
+
+## Results
+
+[**Load Data:**]{.underline}
+
+```{r, LOADPKGE, warning=F, message=F, echo=FALSE}
+library(tidyverse)
+library(rio)
+library(asbio)
+library(dplyr)
+library(ggplot2)
+
+milk_df1 <- import("milk_cleaned_data.csv")
+```
+
+[**Descriptive Statistics**]{.underline}:
+
+```{r, SUMMARYSTATS, warning=F, message=F, echo=FALSE}
+#TREATMENT GROUP STATS
+milk_summary <- 
+  milk_df1 |>
+  group_by(treatment) |>
+  summarise(group_mean=mean(consumer_likelihood), 
+            group_n=n(), 
+            group_sd=sd(consumer_likelihood),
+            group_min= min(consumer_likelihood),
+            group_max= max(consumer_likelihood))  
+milk_summary
+```
+
+[**Condition Check 1 Variability & Standard Deviation**]{.underline}:
+
+Our largest standard deviation \[`Plant Control & Dairy Control`\] 1.38 divided by the smallest standard deviation \[`DairyCon(-)`\] 1.05 equals 1.31. Their quotient is smaller than 2, so we do not violate the condition about constant variance for our ANOVA model.
+
+```{r, CONDI01, warning=F, message=F, echo=FALSE}
+#STANDARD DEVIATION (constant variance)
+1.38/1.05
+```
+
+[**Condition Check 2 Constant Variance**]{.underline}:
+
+In our density plot, we view the distribution of the `Consumer Likelihood` at the different levels of the `Milk (ad type and sentiment)` treatment. The data is not normally distributed nor unimodal among all levels. While the data distributions for the `Plant_control` and `PlantPro(+)` are normal, the other distributions vary. For example, `DairyCon` and `Plant_control` is bimodal, `Dairy control` and `DairyPro` is right-skewed. Therefore, we have violated the condition about constant variance for our ANOVA model.
+
+```{r, CONDI02, warning=F, message=F, echo=FALSE}
+#DENSITY PLOT (normal distribution)
+milk_distribution <-
+  ggplot(data=milk_df1, aes(x=consumer_likelihood, color=treatment)) + 
+  geom_density() + 
+  labs(title ="Consumer Likelihood Density Plot",
+      subtitle= "Assessing Distribution by Milk Treatment",
+      caption ="source: Qualtrics Milk Data") +
+  xlab("Treatment") +
+  ylab ("Consumer Likelihood") 
+milk_distribution
+```
+
+[**Condition Check 3 Symmetrical Distribution around Group Means**]{.underline}:
+
+```{r, CONDI03, warning=F, message=F, echo=FALSE}
+#BOX PLOT (constant variance)
+milk_means <-
+  ggplot(data=milk_df1, aes(x=consumer_likelihood, y=treatment)) + 
+  geom_boxplot(fill="darkseagreen3") + 
+  stat_summary(fun="mean") + 
+  labs(title ="Consumer Likelihood Box Plot",
+      subtitle= "Assessing Distribution by Treatment",
+      caption ="source: Qualtrics Milk Data") +
+  xlab("Treatment") +
+  ylab ("Consumer Likelihood") 
+milk_means
+```
+
+[**Conditions Interpretation & Transformation:**]{.underline}
+
+[**Two-Way ANOVA Model**]{.underline}:
+
+```{r, MOD01, warning=F, message=F, echo=FALSE}
+```
+
+[**Interaction Model**]{.underline}:
+
+```{r, MOD02, warning=F, message=F, echo=FALSE}
+```
+
+[**Independent residuals:**]{.underline}
+
+```{r, RESIDCHECK01, warning=F, message=F, echo=FALSE}
+```
+
+[**Normally Distributed Residuals**:]{.underline}
+
+```{r, RESIDCHECK02, warning=F, message=F, echo=FALSE}
+```
+
+[**Confidence Intervals & Effect Size**]{.underline}:
+
+```{r, CI, warning=F, message=F, echo=FALSE}
+```
+
+[**R-Squared:**]{.underline}
+
+```{r, RSQUARED, warning=F, message=F, echo=FALSE}
+```
+
+## Conclusion
