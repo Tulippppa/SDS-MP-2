@@ -51,7 +51,7 @@ Our largest standard deviation \[`Plant Control & Dairy Control`\] 1.38 divided 
 
 [**Condition Check 2 Symmetrical Distribution around Group Means**]{.underline}:
 
-```{r, CONDI02, warning=F, message=F, fig.height = 3, fig.width = 6, fig.align = "center", echo=FALSE}
+
 #BOX PLOT (constant variance)
 milk_means <-
   ggplot(data=milk_df1, aes(x=consumer_likelihood, y=treatment)) + 
@@ -80,19 +80,12 @@ ggplot(data=milk_df1, aes(x=ad_type))
 [**Two-Way ANOVA Model**]{.underline}:
 
 ```{r, MOD01, warning=F, message=F, echo=FALSE}
-# milk_anova <- aov(consumer_likelihood~treatment, data=milk_df1) 
-# summary(milk_anova) 
 
-milk_anova2 <- aov(consumer_likelihood~ad_type+milk_type, data=milk_df1) 
-summary(milk_anova2) 
-```
 
 [**Interaction Model**]{.underline}:
 
 ```{r, MOD02, warning=F, message=F, echo=FALSE}
 
-interaction <- aov(consumer_likelihood~ad_type*milk_type, data=milk_df1) 
-summary(interaction) 
 ```
 
 [**Pairwise Comparison**]{.underline}:
@@ -120,29 +113,7 @@ milk_bonf
 [**Independent residuals:**]{.underline}
 
 ```{r, RESIDCHECK01, warning=F, message=F, echo=FALSE}
-# resid <-  resid(milk_anova)
-# Model <- data.frame(Fitted = fitted(milk_anova), 
-#                     Residuals = resid(milk_anova), 
-#                     Treatment = milk_df1$treatment,
-#                     Observed= milk_df1$consumer_likelihood)
 
-resid2 <-  resid(milk_anova2)
-Model2 <- data.frame(Fitted = fitted(milk_anova2), 
-                    Residuals = resid(milk_anova2), 
-                    Treatment = milk_df1$treatment,
-                    Observed= milk_df1$consumer_likelihood)
-```
-
-```{r, RESIDPLOT01, warning=F, message=F, fig.height = 3, fig.width = 6, fig.align = "center", echo=FALSE}
-#RESID PLOT
-milk_resid <- 
-  ggplot(Model2, aes(x = Fitted, y = Residuals)) +
-  geom_point() +
-  geom_hline(yintercept = 0) + 
-  labs(title ="Fitted vs Residuals Residual Plot",
-      subtitle= "Assessing Distribution by Treatment",
-      caption ="source: Qualtrics Milk Data") 
-milk_resid
 ```
 
 [**Normally Distributed Residuals**:]{.underline}
@@ -150,14 +121,7 @@ milk_resid
 In our density plot, we view the distribution of the `Consumer Likelihood` at the different levels of the `Milk (ad type and sentiment)` treatment. The data is not normally distributed nor unimodal among all levels. While the data distributions for the `Plant_control` and `PlantPro(+)` are normal, the other distributions vary. For example, `DairyCon` and `Plant_control` is bimodal, `Dairy control` and `DairyPro` is right-skewed. Therefore, we have violated the condition about constant variance for our ANOVA model.
 
 ```{r, RESIDCHECK02, warning=F, message=F, echo=FALSE}
-#RESID PLOT2
-milk_resid2 <-
-  ggplot(data=Model2, aes(x=Residuals, color=Treatment)) + 
-  geom_density() + 
-  labs(title ="Treatment vs Residuals Density Plot",
-      subtitle= "Assessing Distribution by Treatment",
-      caption ="source: Qualtrics Milk Data") 
-milk_resid2
+
 ```
 
 [**Levene's Test:**]{.underline}
